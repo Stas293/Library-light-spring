@@ -10,10 +10,12 @@ public class Human {
     private long id;
     @NotEmpty(message = "Name cannot be empty")
     @Size(min = 2, max = 30, message = "Name must be between 2 and 30 characters")
+    @Pattern(regexp = "^[a-zA-Z\\s]+$", message = "Name must contain only letters and spaces")
     private String firstName;
 
     @NotEmpty(message = "Name cannot be empty")
     @Size(min = 2, max = 30, message = "Name must be between 2 and 30 characters")
+    @Pattern(regexp = "^[a-zA-Z\\s]+$", message = "Name must contain only letters and spaces")
     private String lastName;
 
     @NotNull(message = "Date cannot be empty")

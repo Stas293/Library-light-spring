@@ -2,6 +2,7 @@ package org.springapp.models;
 
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -11,9 +12,11 @@ public class Book {
     private long id;
     @NotEmpty(message = "Title cannot be empty")
     @Size(min = 2, max = 255, message = "Title must be between 2 and 255 characters")
+    @Pattern(regexp = "^[a-zA-Z0-9\\s]+$", message = "Title must contain only letters, numbers and spaces")
     private String title;
     @NotEmpty(message = "Author cannot be empty")
     @Size(min = 2, max = 255, message = "Author must be between 2 and 255 characters")
+    @Pattern(regexp = "^[a-zA-Z\\s]+$", message = "Author must contain only letters and spaces")
     private String author;
     @NotNull(message = "Date of publication cannot be empty")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
