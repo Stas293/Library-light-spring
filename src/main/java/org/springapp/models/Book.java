@@ -1,9 +1,6 @@
 package org.springapp.models;
 
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
@@ -20,6 +17,7 @@ public class Book {
     private String author;
     @NotNull(message = "Date of publication cannot be empty")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @PastOrPresent(message = "Date of publication cannot be in the future")
     private Date published;
 
     public Book() {

@@ -20,6 +20,7 @@ public class Human {
 
     @NotNull(message = "Date cannot be empty")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @PastOrPresent(message = "Date cannot be in the future")
     private Date birthdate;
 
     private List<Book> books;

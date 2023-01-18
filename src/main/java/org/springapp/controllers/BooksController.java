@@ -6,7 +6,6 @@ import org.springapp.models.Book;
 import org.springapp.models.Human;
 import org.springapp.service.BookService;
 import org.springapp.service.HumanService;
-import org.springapp.util.BookValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,13 +17,11 @@ import org.springframework.web.bind.annotation.*;
 public class BooksController {
     private final BookService bookService;
     private final HumanService humanService;
-    private final BookValidator bookValidator;
 
     @Autowired
-    public BooksController(BookService bookService, HumanService humanService, BookValidator bookValidator) {
+    public BooksController(BookService bookService, HumanService humanService) {
         this.bookService = bookService;
         this.humanService = humanService;
-        this.bookValidator = bookValidator;
     }
 
     @GetMapping()
@@ -35,7 +32,6 @@ public class BooksController {
 
     @PostMapping()
     public String create(@ModelAttribute("book") @Valid Book book, BindingResult bindingResult) {
-        bookValidator.validate(book, bindingResult);
         if (bindingResult.hasErrors()) {
             return BookConstants.BOOKS_NEW;
         }
@@ -85,7 +81,6 @@ public class BooksController {
 
     @PatchMapping("/{id}")
     public String update(@ModelAttribute("book") @Valid Book book, BindingResult bindingResult) {
-        bookValidator.validate(book, bindingResult);
         if (bindingResult.hasErrors()) {
             return BookConstants.BOOKS_EDIT;
         }

@@ -33,13 +33,5 @@ public class HumanValidator implements Validator {
             errors.rejectValue("firstName", "", "This person already exists");
             errors.rejectValue("lastName", "", "This person already exists");
         }
-
-        if (human.getBirthdate().after(new Date())) {
-            errors.rejectValue("birthdate", "", "Birthdate cannot be in the future");
-        }
-
-        if (human.getBirthdate().before(new Date(0))) {
-            errors.rejectValue("birthdate", "", "Birthdate cannot be before 1970");
-        }
     }
 }
