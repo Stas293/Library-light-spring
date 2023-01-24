@@ -13,5 +13,6 @@ CREATE TABLE book (
                       author VARCHAR(255) NOT NULL,
                       published DATE NOT NULL,
                       owner_id BIGINT REFERENCES human(id) ON DELETE SET NULL,
+                      date_requested TIMESTAMP,
                       PRIMARY KEY (id)
 );

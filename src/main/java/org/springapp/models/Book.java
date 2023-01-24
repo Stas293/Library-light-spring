@@ -30,6 +30,7 @@ public class Book {
     private Date published;
 
     @Column(name = "date_requested")
+    @Temporal(TemporalType.TIMESTAMP)
     private Date dateRequested;
 
     @ManyToOne
