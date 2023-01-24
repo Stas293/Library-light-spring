@@ -11,11 +11,16 @@
 <a th:text="${person.getId()}" th:href="@{/people/{id}/edit(id=${person.getId()})}">Edit</a>
 <p th:text="${person.getFirstName()}"></p>
 <p th:text="${person.getLastName()}"></p>
-<p th:text="${person.getBirthdate()}"></p>
+<p th:text="${person.getBirthDate()}"></p>
 <p th:unless="${person.getBooks().isEmpty()}">Books:</p>
 <ul th:unless="${person.getBooks().isEmpty()}">
   <li th:each="book : ${person.getBooks()}">
-    <a th:href="@{/books/{id}(id=${book.getId()})}" th:text="${book.getTitle()}"></a>
+    <div th:if="${book.isExpired()}">
+      <a th:href="@{/books/{id}(id=${book.getId()})}" th:text="${book.getTitle()}" th:style="'color: red'"></a>
+    </div>
+    <div th:unless="${book.isExpired()}">
+      <a th:href="@{/books/{id}(id=${book.getId()})}" th:text="${book.getTitle()}"></a>
+    </div>
   </li>
 </ul>
 

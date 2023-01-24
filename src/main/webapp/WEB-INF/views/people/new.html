@@ -19,8 +19,8 @@
     <div style="color: red" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}">LastName error</div>
     <br>
     <label for="birthDate">Birthdate: </label>
-    <input type="date" th:field="*{birthdate}" id="birthDate">
-    <div style="color: red" th:if="${#fields.hasErrors('birthdate')}" th:errors="*{birthdate}">Birthdate error</div>
+    <input type="date" th:field="*{birthDate}" id="birthDate">
+    <div style="color: red" th:if="${#fields.hasErrors('birthDate')}" th:errors="*{birthDate}">BirthDate error</div>
     <br>
     <input type="submit" value="Create">
 </form>

@@ -7,8 +7,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
-import java.util.Date;
-
 @Component
 public class HumanValidator implements Validator {
     private final HumanService humanService;

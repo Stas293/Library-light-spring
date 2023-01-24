@@ -6,7 +6,9 @@ import org.springapp.models.Book;
 import org.springapp.models.Human;
 import org.springapp.service.BookService;
 import org.springapp.service.HumanService;
+import org.springapp.util.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -25,8 +27,15 @@ public class BooksController {
     }
 
     @GetMapping()
-    public String indexPage(Model model) {
-        model.addAttribute("books", bookService.getList());
+    public String indexPage(
+            @RequestParam(value = "pageNum", required = false, defaultValue = "0")int pageNum,
+            @RequestParam(value = "books_per_page", required = false, defaultValue = "5")int booksPerPage,
+            @RequestParam(value = "sort", required = false, defaultValue = "title")String sort,
+            Model model) {
+        Page<Book> books = bookService.getPage(pageNum, booksPerPage, sort);
+        model.addAttribute("books", books);
+        model.addAttribute("pageSequence", Utils.getSequencePages(books.getTotalPages()));
+        model.addAttribute("sorts", BookConstants.SORTS);
         return BookConstants.BOOKS_INDEX;
     }
 
@@ -46,10 +55,9 @@ public class BooksController {
 
     @GetMapping("/{id}")
     public String show(@PathVariable("id") int id, Model model, @ModelAttribute("person") Human person) {
-        model.addAttribute("book", bookService.getBook(id));
-        if (bookService.getOwner(id) != null) {
-            model.addAttribute("human", bookService.getOwner(id));
-        } else {
+        Book book = bookService.getBook(id);
+        model.addAttribute("book", book);
+        if (book.getOwner() == null) {
             model.addAttribute("humans", humanService.getPeople());
         }
         return BookConstants.BOOKS_BOOK;
@@ -87,5 +95,19 @@ public class BooksController {
 
         bookService.update(book);
         return BookConstants.REDIRECT_BOOKS;
+    }
+
+    @GetMapping("/search")
+    public String search(
+            @RequestParam(value = "search", required = false, defaultValue = "") String query,
+            @RequestParam(value = "pageNum", required = false, defaultValue = "0")int pageNum,
+            @RequestParam(value = "books_per_page", required = false, defaultValue = "5")int booksPerPage,
+            @RequestParam(value = "sort", required = false, defaultValue = "title")String sort,
+            Model model) {
+        Page<Book> books = bookService.search(query, pageNum, booksPerPage, sort);
+        model.addAttribute("books", books);
+        model.addAttribute("pageSequence", Utils.getSequencePages(books.getTotalPages()));
+        model.addAttribute("sorts", BookConstants.SORTS);
+        return BookConstants.BOOKS_SEARCH;
     }
 }

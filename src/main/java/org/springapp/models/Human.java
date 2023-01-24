@@ -1,38 +1,50 @@
 package org.springapp.models;
 
+import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
-import java.util.List;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
+@Entity
+@Table(name = "human")
 public class Human {
+    @Id
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     @NotEmpty(message = "Name cannot be empty")
     @Size(min = 2, max = 30, message = "Name must be between 2 and 30 characters")
     @Pattern(regexp = "^[a-zA-Z\\s]+$", message = "Name must contain only letters and spaces")
+    @Column(name = "first_name")
     private String firstName;
 
     @NotEmpty(message = "Name cannot be empty")
     @Size(min = 2, max = 30, message = "Name must be between 2 and 30 characters")
     @Pattern(regexp = "^[a-zA-Z\\s]+$", message = "Name must contain only letters and spaces")
+    @Column(name = "last_name")
     private String lastName;
 
     @NotNull(message = "Date cannot be empty")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @PastOrPresent(message = "Date cannot be in the future")
-    private Date birthdate;
+    @Column(name = "birthdate")
+    private Date birthDate;
 
-    private List<Book> books;
+    @OneToMany(mappedBy = "owner")
+    private Set<Book> books = new LinkedHashSet<>();
+
 
     public Human() {
     }
 
-    public Human(long id, String firstName, String lastName, Date birthdate, List<Book> books) {
+    public Human(long id, String firstName, String lastName, Date birthDate, Set<Book> books) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.birthdate = birthdate;
+        this.birthDate = birthDate;
         this.books = books;
     }
 
@@ -60,19 +72,19 @@ public class Human {
         this.lastName = lastName;
     }
 
-    public Date getBirthdate() {
-        return birthdate;
+    public Date getBirthDate() {
+        return birthDate;
     }
 
-    public void setBirthdate(Date birthdate) {
-        this.birthdate = birthdate;
+    public void setBirthdate(Date birthDate) {
+        this.birthDate = birthDate;
     }
 
-    public void setBooks(List<Book> books) {
+    public void setBooks(Set<Book> books) {
         this.books = books;
     }
 
-    public List<Book> getBooks() {
+    public Set<Book> getBooks() {
         return books;
     }
 
@@ -86,7 +98,7 @@ public class Human {
                 "id=" + id +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
-                ", birthdate=" + birthdate +
+                ", birthdate=" + birthDate +
                 ", books=" + books +
                 '}';
     }

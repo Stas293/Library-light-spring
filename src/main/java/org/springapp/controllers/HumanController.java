@@ -5,7 +5,9 @@ import org.springapp.constants.HumanConstants;
 import org.springapp.models.Human;
 import org.springapp.service.HumanService;
 import org.springapp.util.HumanValidator;
+import org.springapp.util.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -24,8 +26,15 @@ public class HumanController {
     }
 
     @GetMapping()
-    public String indexPage(Model model) {
-        model.addAttribute("people", humanService.getPeople());
+    public String indexPage(
+            @RequestParam(value = "pageNum", required = false, defaultValue = "0")int pageNum,
+            @RequestParam(value = "humans_per_page", required = false, defaultValue = "5")int booksPerPage,
+            @RequestParam(value = "sort", required = false, defaultValue = "firstName")String sort,
+            Model model) {
+        Page<Human> people = humanService.getPage(pageNum, booksPerPage, sort);
+        model.addAttribute("people", people);
+        model.addAttribute("pageSequence", Utils.getSequencePages(people.getTotalPages()));
+        model.addAttribute("sorts", HumanConstants.SORTS);
         return HumanConstants.PEOPLE_INDEX;
     }
 

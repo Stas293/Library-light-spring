@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Books</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+</head>
+<body>
+<h1>Books</h1>
+
+<form th:method="GET" th:action="@{/books/search}">
+    <label for="booksPerPage">Books per page: </label>
+    <input type="number" id="booksPerPage" min="1" max="100" name="books_per_page" th:value="${books.getSize()}">
+    <label for="pageNum">Page number: </label>
+    <div th:if="${books.getTotalPages()} != 0" th:each="pageNum : ${pageSequence}" id="pageNum">
+        <input type="radio" th:name="pageNum" th:value="${pageNum}" th:checked="${pageNum == books.getNumber()}"> <span th:text="${pageNum}"></span>
+    </div>
+    <label for="sort">Sort by: </label>
+    <select id="sort" name="sort">
+        <option th:each="sort : ${sorts}" th:value="${sort}" th:text="${sort}" th:selected="${sort == sortParam}"></option>
+    </select>
+    <label for="search">Search: </label>
+    <input type="text" id="search" name="search" th:value="${param.search}">
+    <input type="submit" value="Submit">
+</form>
+
+<table>
+    <tr>
+        <th>ID</th>
+        <th>Title</th>
+        <th>Author</th>
+        <th>Published</th>
+        <th>Person</th>
+    </tr>
+    <tr th:if="${books.getContent().isEmpty()}">
+        <p>No books found</p>
+    </tr>
+    <tr th:each="book : ${books.getContent()}">
+        <td> <a th:href="@{/books/{id}(id=${book.getId()})}" th:text="${book.getId()}"></a></td>
+        <td th:text="${book.getTitle()}"></td>
+        <td th:text="${book.getAuthor()}"></td>
+        <td th:text="${book.getPublished()}"></td>
+        <div th:if="${book.getOwner()}!=null">
+            <td th:text="${book.getOwner().getFullName()}"></td>
+        </div>
+        <div th:if="${book.getOwner()}==null">
+            <td>Not owned</td>
+        </div>
+    </tr>
+</table>
+
+<br>
+
+<a href="/books/new">New book</a>
+
+</body>
+</html>

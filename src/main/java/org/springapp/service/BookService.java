@@ -1,52 +1,64 @@
 package org.springapp.service;
 
-import org.springapp.dao.BookDAO;
 import org.springapp.models.Book;
 import org.springapp.models.Human;
+import org.springapp.repository.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.Date;
 
 @Service
 public class BookService {
-    private final BookDAO bookDAO;
+    private final BookRepository bookRepository;
 
 
     @Autowired
-    public BookService(BookDAO bookDAO) {
-        this.bookDAO = bookDAO;
-    }
-
-    public List<Book> getList() {
-        return bookDAO.getList();
+    public BookService(BookRepository bookRepository) {
+        this.bookRepository = bookRepository;
     }
 
     public void save(Book book) {
-        bookDAO.save(book);
+        bookRepository.save(book);
     }
 
-    public Book getBook(int id) {
-        return bookDAO.get(id).orElse(null);
+    public Book getBook(long id) {
+        return bookRepository.findById(id).orElse(null);
     }
 
-    public Human getOwner(int id) {
-        return bookDAO.getHumanByBookId(id).orElse(null);
+    public void release(long id) {
+        Book book = bookRepository.findById(id).orElse(null);
+        if (book != null) {
+            book.setOwner(null);
+            bookRepository.save(book);
+        }
     }
 
-    public void release(int id) {
-        bookDAO.release(id);
+    public void take(long id, Human person) {
+        Book book = bookRepository.findById(id).orElse(null);
+        if (book != null) {
+            book.setOwner(person);
+            book.setDateRequested(new Date());
+            bookRepository.save(book);
+        }
     }
 
-    public void take(int id, Human person) {
-        bookDAO.take(id, person.getId());
-    }
-
-    public void delete(int id) {
-        bookDAO.delete(id);
+    public void delete(long id) {
+        bookRepository.deleteById(id);
     }
 
     public void update(Book book) {
-        bookDAO.update(book);
+        bookRepository.save(book);
+    }
+
+    public Page<Book> getPage(int pageNum, int booksPerPage, String sortField) {
+        return bookRepository.findAll(PageRequest.of(pageNum, booksPerPage, Sort.by(sortField)));
+    }
+
+    public Page<Book> search(String query, int pageNum, int booksPerPage, String sortField) {
+        return bookRepository.findByTitleContainingIgnoreCase(query, PageRequest.of(pageNum, booksPerPage, Sort.by(sortField)));
     }
 }

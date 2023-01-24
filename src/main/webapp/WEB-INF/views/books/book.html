@@ -12,14 +12,14 @@
 <p th:text="${book.getTitle()}"></p>
 <p th:text="${book.getAuthor()}"></p>
 <p th:text="${book.getPublished()}"></p>
-<div th:if="${human}">
-  <p th:text="${human.getFullName()}"></p>
+<div th:if="${book.getOwner()}">
+  <p th:text="${book.getOwner().getFullName()}"></p>
   <form th:method="PATCH" th:action="@{/books/{id}/release(id=${book.getId()})}">
     <input type="submit" value="Remove human">
   </form>
 </div>
 
-<div th:unless="${human}">
+<div th:unless="${book.getOwner()}">
   <form th:method="PATCH" th:action="@{/books/{id}/take(id=${book.getId()})}">
     <label for="human">Human: </label>
     <select id="human" th:object="${person}" th:field="*{id}">
