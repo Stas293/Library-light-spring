@@ -30,20 +30,19 @@ public class BookService {
     }
 
     public void release(long id) {
-        Book book = bookRepository.findById(id).orElse(null);
-        if (book != null) {
+        bookRepository.findById(id).ifPresent(book -> {
             book.setOwner(null);
+            book.setDateRequested(null);
             bookRepository.save(book);
-        }
+        });
     }
 
     public void take(long id, Human person) {
-        Book book = bookRepository.findById(id).orElse(null);
-        if (book != null) {
+        bookRepository.findById(id).ifPresent(book -> {
             book.setOwner(person);
             book.setDateRequested(new Date());
             bookRepository.save(book);
-        }
+        });
     }
 
     public void delete(long id) {
